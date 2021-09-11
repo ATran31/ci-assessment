@@ -22,10 +22,10 @@ s3 = boto3.client("s3", region_name=aws_region)
 app = FastAPI()
 
 app.mount(
-    "/_next/static", StaticFiles(directory="ui/ceres-ui/.next/static"), name="static"
+    "/_next/static", StaticFiles(directory="ui/.next/static"), name="static"
 )
 
-templates = Jinja2Templates(directory="ui/ceres-ui/.next/serverless/pages")
+templates = Jinja2Templates(directory="ui/.next/serverless/pages")
 
 
 def _get_metadata():
