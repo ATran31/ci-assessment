@@ -31,16 +31,7 @@ const useStyles = makeStyles({
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = useState(false);
-  const [metadata, setMetadata] = useState(null);
   const classes = useStyles();
-
-  useEffect(async () => {
-    if (open && !metadata) {
-      const res = await fetch(`api/v1/file/${row.name}`);
-      const data = await res.json();
-      if (data) setMetadata(data);
-    }
-  }, [open]);
 
   return (
     <>
@@ -55,7 +46,7 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.name}
+          {row.imageName}
         </TableCell>
       </TableRow>
       <TableRow>
@@ -77,24 +68,23 @@ function Row(props) {
               <Typography variant="h6" gutterBottom component="div">
                 Metadata Record
               </Typography>
-              {metadata && (
-                <Table size="small" aria-label="image-metadata">
-                  <TableHead>
+
+              <Table size="small" aria-label="image-metadata">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Attribute</TableCell>
+                    <TableCell>Value</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {Object.entries(row).map((kvPair) => (
                     <TableRow>
-                      <TableCell>Attribute</TableCell>
-                      <TableCell>Value</TableCell>
+                      <TableCell>{kvPair[0]}</TableCell>
+                      <TableCell>{kvPair[1]}</TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {Object.entries(metadata).map((kvPair) => (
-                      <TableRow>
-                        <TableCell>{kvPair[0]}</TableCell>
-                        <TableCell>{kvPair[1]}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
+                  ))}
+                </TableBody>
+              </Table>
             </Box>
           </Collapse>
         </TableCell>
@@ -109,12 +99,7 @@ export default function CollapsibleTable() {
   useEffect(async () => {
     const res = await fetch("api/v1/files");
     const data = await res.json();
-    if (data)
-      setRows(
-        data.map((elem) => {
-          return { name: elem };
-        })
-      );
+    if (data) setRows(data);
   }, []);
   return (
     <TableContainer component={Paper} className={classes.tableMain}>

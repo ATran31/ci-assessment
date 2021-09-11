@@ -82,7 +82,7 @@ def get_files(start_dt: Optional[str] = None, end_dt: Optional[str] = None):
                 )
             )
         else:
-            return [file["imageName"] for file in resp]
+            return [file for file in resp]
     except ClientError as ce:
         logging.error(ce)
         return JSONResponse(
